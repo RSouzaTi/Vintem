@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import br.edu.utfpr.vintem.databinding.ItemLancamentoBinding
 import br.edu.utfpr.vintem.model.Lancamento
 
-class LancamentoAdapter(private var lista: List<Lancamento>) :
+class LancamentoAdapter(var lista: List<Lancamento>) :
     RecyclerView.Adapter<LancamentoAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemLancamentoBinding) : RecyclerView.ViewHolder(binding.root)

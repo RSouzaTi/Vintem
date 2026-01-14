@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import br.edu.utfpr.vintem.databinding.ActivityCadastroBinding
 import br.edu.utfpr.vintem.model.Lancamento
 import br.edu.utfpr.vintem.viewmodel.LancamentoViewModel
-import java.util.*
+import java.util.Calendar
 
 class CadastroActivity : AppCompatActivity() {
 
@@ -17,10 +17,10 @@ class CadastroActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Inicializa o View Binding corretamente
         binding = ActivityCadastroBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Chamamos as funções que organizam o código
         configurarData()
         configurarBotaoSalvar()
     }
@@ -28,14 +28,10 @@ class CadastroActivity : AppCompatActivity() {
     private fun configurarData() {
         binding.etData.setOnClickListener {
             val cal = Calendar.getInstance()
-            val ano = cal.get(Calendar.YEAR)
-            val mes = cal.get(Calendar.MONTH)
-            val dia = cal.get(Calendar.DAY_OF_MONTH)
-
-            DatePickerDialog(this, { _, year, month, day ->
-                val dataFormatada = String.format("%02d/%02d/%d", day, month + 1, year)
+            DatePickerDialog(this, { _, ano, mes, dia ->
+                val dataFormatada = String.format("%02d/%02d/%d", dia, mes + 1, ano)
                 binding.etData.setText(dataFormatada)
-            }, ano, mes, dia).show()
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
         }
     }
 
@@ -46,28 +42,25 @@ class CadastroActivity : AppCompatActivity() {
             val data = binding.etData.text.toString()
             val tipo = if (binding.rbReceita.isChecked) "Receita" else "Despesa"
 
-            if (validarCampos(valorString, desc, data)) {
-                val novoLancamento = Lancamento(
-                    valor = valorString.toDouble(),
-                    descricao = desc,
-                    data = data,
-                    tipo = tipo
-                )
+            if (valorString.isNotEmpty() && desc.isNotEmpty() && data.isNotEmpty()) {
+                try {
+                    val valorDouble = valorString.replace(',', '.').toDouble()
+                    val novoLancamento = Lancamento(
+                        valor = valorDouble,
+                        descricao = desc,
+                        data = data,
+                        tipo = tipo
+                    )
 
-                // Aqui é onde a mágica do MVVM acontece:
-                viewModel.inserir(novoLancamento)
-
-                Toast.makeText(this, "Vintém salvo com sucesso!", Toast.LENGTH_SHORT).show()
-                finish()
+                    viewModel.inserir(novoLancamento)
+                    Toast.makeText(this, "Vintém salvo!", Toast.LENGTH_SHORT).show()
+                    finish() // Volta para a tela principal
+                } catch (e: NumberFormatException) {
+                    Toast.makeText(this, "Valor inválido! Use números e, se necessário, uma vírgula para os centavos.", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                Toast.makeText(this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun validarCampos(valor: String, desc: String, data: String): Boolean {
-        if (valor.isEmpty() || desc.isEmpty() || data.isEmpty()) {
-            Toast.makeText(this, "Preencha todos os campos do Vintém!", Toast.LENGTH_SHORT).show()
-            return false
-        }
-        return true
     }
 }

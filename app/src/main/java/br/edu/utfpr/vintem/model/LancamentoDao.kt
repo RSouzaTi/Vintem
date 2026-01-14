@@ -1,6 +1,7 @@
 package br.edu.utfpr.vintem.model
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
@@ -12,4 +13,7 @@ interface LancamentoDao {
 
     @Insert
     suspend fun insert(lancamento: Lancamento)
+
+    @Delete
+    suspend fun deletar(lancamento: Lancamento)
 }

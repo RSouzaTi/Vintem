@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import br.edu.utfpr.vintem.model.AppDatabase
 import br.edu.utfpr.vintem.model.Lancamento
 import br.edu.utfpr.vintem.repository.LancamentoRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LancamentoViewModel(application: Application) : AndroidViewModel(application) {
@@ -22,5 +23,11 @@ class LancamentoViewModel(application: Application) : AndroidViewModel(applicati
 
     fun inserir(lancamento: Lancamento) = viewModelScope.launch {
         repository.insert(lancamento)
+    }
+
+    fun deletar(lancamento: Lancamento) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deletar(lancamento) // Certifique-se de que o repository também tenha a função deletar
+        }
     }
 }

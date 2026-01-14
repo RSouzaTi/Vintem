@@ -9,4 +9,8 @@ class LancamentoRepository(private val dao: LancamentoDao) {
     suspend fun insert(lancamento: Lancamento) {
         dao.insert(lancamento)
     }
+    suspend fun deletar(lancamento: Lancamento) {
+        dao.deletar(lancamento)
+    }
+
 }
