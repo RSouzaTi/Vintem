@@ -3,7 +3,7 @@ package br.edu.utfpr.vintem.model
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
-@Database(entities = [Lancamento::class], version = 1)
+@Database(entities = [Lancamento::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun lancamentoDao(): LancamentoDao
 
@@ -17,7 +17,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "vintem_database"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration() // <-- Adicione isso para evitar o crash
+                    .build()
                 INSTANCE = instance
                 instance
             }

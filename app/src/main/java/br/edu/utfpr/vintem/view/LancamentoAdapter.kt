@@ -1,11 +1,13 @@
 package br.edu.utfpr.vintem.view
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import br.edu.utfpr.vintem.R
 import br.edu.utfpr.vintem.databinding.ItemLancamentoBinding
 import br.edu.utfpr.vintem.model.Lancamento
+import java.text.NumberFormat
+import java.util.Locale
 
 class LancamentoAdapter(var lista: List<Lancamento>) :
     RecyclerView.Adapter<LancamentoAdapter.ViewHolder>() {
@@ -17,18 +19,28 @@ class LancamentoAdapter(var lista: List<Lancamento>) :
         return ViewHolder(binding)
     }
 
+    // O formatador está certinho aqui fora por performance!
+    private val formatador = NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val lancamento = lista[position]
+
+        // --- A LINHA QUE FALTAVA ESTÁ AQUI EMBAIXO ---
+        val valorFormatado = formatador.format(lancamento.valor)
+
+        // Preenche os textos básicos
         holder.binding.tvDescricao.text = lancamento.descricao
         holder.binding.tvData.text = lancamento.data
 
-        // Formata o valor e a cor
-        holder.binding.tvValor.text = String.format("R$ %.2f", lancamento.valor)
-
-        if (lancamento.tipo == "Despesa") {
-            holder.binding.tvValor.setTextColor(Color.RED)
-        } else {
-            holder.binding.tvValor.setTextColor(Color.parseColor("#2E7D32")) // Verde escuro
+        // Aplica a lógica de cor e o valor formatado
+        holder.binding.tvValor.apply {
+            if (lancamento.tipo == "Receita") {
+                text = "+ $valorFormatado"
+                setTextColor(context.getColor(R.color.receita_green))
+            } else {
+                text = "- $valorFormatado"
+                setTextColor(context.getColor(R.color.despesa_red))
+            }
         }
     }
 

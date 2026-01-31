@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:text="Compra no mercado"
             android:textSize="16sp"
+            android:textColor="#212121"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tvData"
             app:layout_constraintEnd_toStartOf="@+id/tvValor"

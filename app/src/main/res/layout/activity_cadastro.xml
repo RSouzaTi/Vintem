@@ -14,6 +14,7 @@
         android:layout_marginTop="48dp"
         android:layout_marginEnd="16dp"
         android:text="Novo Lançamento"
+        android:textColor="#212121"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,13 +22,15 @@
 
     <EditText
         android:id="@+id/etValor"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        android:hint="Valor (R$)"
-        android:inputType="numberDecimal"
+        android:maxLength="12"
+        android:hint="R$ 0,00"
+        android:textColorHint="#9E9E9E"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitulo" />
@@ -40,6 +43,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:hint="Descrição (ex: Aluguel)"
+        android:textColorHint="#9E9E9E"
         android:inputType="textCapSentences"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,6 +59,7 @@
         android:clickable="true"
         android:focusable="false"
         android:hint="Data"
+        android:textColorHint="#9E9E9E"
         android:inputType="none"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,6 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="#212121"
             android:text="Receita (Crédito)" />
 
         <RadioButton
@@ -84,6 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="#212121"
             android:text="Despesa (Débito)" />
     </RadioGroup>
 

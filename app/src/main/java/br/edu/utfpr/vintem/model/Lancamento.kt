@@ -9,5 +9,6 @@ data class Lancamento(
     val valor: Double,
     val descricao: String,
     val data: String,
-    val tipo: String // "Receita" ou "Despesa"
+    val tipo: String,// "Receita" ou "Despesa"
+    val categoria: String = "Geral" // Novo campo
 )

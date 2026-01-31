@@ -13,7 +13,8 @@ import br.edu.utfpr.vintem.model.Lancamento
 import br.edu.utfpr.vintem.view.CadastroActivity
 import br.edu.utfpr.vintem.view.LancamentoAdapter
 import br.edu.utfpr.vintem.viewmodel.LancamentoViewModel
-
+import java.text.NumberFormat
+import java.util.Locale
 
 
 class MainActivity : AppCompatActivity() {
@@ -73,6 +74,9 @@ class MainActivity : AppCompatActivity() {
         lista.forEach {
             if (it.tipo == "Receita") total += it.valor else total -= it.valor
         }
-        binding.tvSaldoTotal.text = String.format("R$ %.2f", total)
+
+        // Usa a mesma formatação aqui!
+        val formatador = NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
+        binding.tvSaldoTotal.text = formatador.format(total)
     }
 }
