@@ -10,5 +10,5 @@ data class Lancamento(
     val descricao: String,
     val data: String,
     val tipo: String,// "Receita" ou "Despesa"
-    val categoria: String = "Geral" // Novo campo
+    val categoria: String  // Ex: "Alimentação", "Lazer", "Salário"
 )

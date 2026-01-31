@@ -30,7 +30,7 @@
         android:maxLength="12"
         android:hint="R$ 0,00"
         android:textColorHint="#9E9E9E"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitulo" />
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="#212121"
-            android:text="Receita (Crédito)" />
+            android:text="Receita" />
 
         <RadioButton
             android:id="@+id/rbDespesa"
@@ -91,8 +91,31 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="#212121"
-            android:text="Despesa (Débito)" />
+            android:text="Despesa" />
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/tvLabelCategoria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Selecione a Categoria:"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rgTipo" />
+
+    <Spinner
+        android:id="@+id/spinnerCategoria"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvLabelCategoria" />
 
     <Button
         android:id="@+id/btnSalvar"
@@ -101,7 +124,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
-        android:backgroundTint="@color/primary_dark"
         android:text="Salvar Lançamento"
         app:cornerRadius="12dp"
         app:layout_constraintBottom_toBottomOf="parent"

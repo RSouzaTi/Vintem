@@ -5,8 +5,10 @@ import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import br.edu.utfpr.vintem.R
 import br.edu.utfpr.vintem.databinding.ActivityCadastroBinding
 import br.edu.utfpr.vintem.model.Lancamento
 import br.edu.utfpr.vintem.viewmodel.LancamentoViewModel
@@ -21,27 +23,25 @@ class CadastroActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Inicializa o View Binding corretamente
         binding = ActivityCadastroBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Chamadas organizadas
+        configurarMascaraMoeda()
+        configurarSpinnerCategoria() // Chamar uma vez no onCreate
         configurarData()
         configurarBotaoSalvar()
     }
 
-    private fun configurarData() {
-        binding.etData.setOnClickListener {
-            val cal = Calendar.getInstance()
-            DatePickerDialog(
-                this,
-                { _, ano, mes, dia ->
-                    val dataFormatada = String.format("%02d/%02d/%d", dia, mes + 1, ano)
-                    binding.etData.setText(dataFormatada)
-                },
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            ).show()
+    private fun configurarSpinnerCategoria() {
+        // Correção: O Context correto aqui é 'this' (a Activity)
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.categorias_array,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinnerCategoria.adapter = adapter
         }
     }
 
@@ -49,15 +49,12 @@ class CadastroActivity : AppCompatActivity() {
         binding.etValor.addTextChangedListener(object : TextWatcher {
             private var atual = ""
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.toString() != atual) {
-                    // Remove tudo que não é número
                     val limpo = s.toString().replace("[^\\d]".toRegex(), "")
                     if (limpo.isEmpty()) return
 
                     val parsed = limpo.toDouble() / 100
-                    // Força o padrão brasileiro: R$ 1.000,00
                     val formatado = NumberFormat.getCurrencyInstance(Locale("pt", "BR")).format(parsed)
 
                     atual = formatado
@@ -69,23 +66,25 @@ class CadastroActivity : AppCompatActivity() {
         })
     }
 
+    private fun configurarData() {
+        binding.etData.setOnClickListener {
+            val cal = Calendar.getInstance()
+            DatePickerDialog(this, { _, ano, mes, dia ->
+                val dataFormatada = String.format("%02d/%02d/%d", dia, mes + 1, ano)
+                binding.etData.setText(dataFormatada)
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+        }
+    }
+
     private fun configurarBotaoSalvar() {
         binding.btnSalvar.setOnClickListener {
-            val valorBruto = binding.etValor.text.toString()
-            val desc = binding.etDescricao.text.toString()
-            // Pega o texto: "R$ 1.250,50"
             val valorTexto = binding.etValor.text.toString()
+            val desc = binding.etDescricao.text.toString()
+            val data = binding.etData.text.toString()
+            val categoria = binding.spinnerCategoria.selectedItem.toString() // Pega a categoria!
 
-        // Transforma em: "1250.50"
-            val valorParaBanco = valorTexto
-                .replace("[R$\\s]".toRegex(), "") // Remove R$ e espaços
-                .replace(".", "")                 // Remove os pontos de milhar
-                .replace(",", ".")                // Troca a vírgula decimal por ponto
-
-            val valorFinal = valorParaBanco.toDoubleOrNull() ?: 0.0
-
-            // 1. VALIDAÇÃO PROATIVA (UX Melhor)
-            if (valorBruto.isEmpty() || valorBruto == "R$ 0,00") {
+            // Validações
+            if (valorTexto.isEmpty() || valorTexto == "R$ 0,00") {
                 binding.etValor.error = "Campo obrigatório"
                 return@setOnClickListener
             }
@@ -93,30 +92,37 @@ class CadastroActivity : AppCompatActivity() {
                 binding.etDescricao.error = "Dê uma descrição"
                 return@setOnClickListener
             }
+            if (data.isEmpty()) {
+                binding.etData.error = "Selecione a data"
+                return@setOnClickListener
+            }
 
-            // 2. TENTATIVA DE CONVERSÃO COM TRY-CATCH (Segurança Extra)
             try {
-                // Limpa a máscara para converter
-                val valorFormatado = valorBruto
+                // Converte o texto da moeda para Double puro
+                val valorFinal = valorTexto
                     .replace("[R$\\s]".toRegex(), "")
                     .replace(".", "")
                     .replace(",", ".")
-
-                val valorFinal = valorFormatado.toDouble()
+                    .toDouble()
 
                 val tipo = if (binding.rbReceita.isChecked) "Receita" else "Despesa"
-                val data = binding.etData.text.toString()
 
-                val novo =
-                    Lancamento(valor = valorFinal, descricao = desc, data = data, tipo = tipo)
+                // Cria o objeto com a CATEGORIA incluída (Passo 01)
+                val novo = Lancamento(
+                    valor = valorFinal,
+                    descricao = desc,
+                    data = data,
+                    tipo = tipo,
+                    categoria = categoria
+                )
+
                 viewModel.inserir(novo)
                 finish()
 
             } catch (e: Exception) {
-                // ALERTA DE ERRO (Caso algo muito bizarro aconteça na conversão)
                 AlertDialog.Builder(this)
-                    .setTitle("Erro ao salvar")
-                    .setMessage("Verifique os dados digitados. Erro: ${e.message}")
+                    .setTitle("Erro")
+                    .setMessage("Erro ao processar valor: ${e.message}")
                     .setPositiveButton("OK", null)
                     .show()
             }

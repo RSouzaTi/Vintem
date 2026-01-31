@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Vintem</string>
+
+    <string-array name="categorias_array">
+        <item>Alimentação</item>
+        <item>Transporte</item>
+        <item>Lazer</item>
+        <item>Saúde</item>
+        <item>Educação</item>
+        <item>Moradia</item>
+        <item>Outros</item>
+    </string-array>
 </resources>

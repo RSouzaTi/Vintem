@@ -42,6 +42,7 @@ android {
     }
 }
 
+
 dependencies {
     implementation(libs.androidx.cardview)
     val room_version = "2.6.1"
@@ -58,4 +59,5 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("com.google.android.material:material:1.11.0")
+    implementation("com.github.PhilJay:MPAndroidChart:3.1.0")
 }
