@@ -116,7 +116,7 @@ class CadastroActivity : AppCompatActivity() {
                     categoria = categoria
                 )
 
-                viewModel.inserir(novo)
+                viewModel.insert(novo)
                 finish()
 
             } catch (e: Exception) {

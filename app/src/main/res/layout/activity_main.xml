@@ -17,6 +17,7 @@
         android:layout_marginEnd="16dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"
+        app:cardBackgroundColor="?attr/colorSurface"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
@@ -62,8 +63,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Histórico de Lançamentos"
+        android:textColor="?android:attr/textColorPrimary"
         android:textStyle="bold"
+        android:text="Histórico de Lançamentos"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/pieChart" />
 
